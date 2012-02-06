@@ -1,4 +1,7 @@
-before_script: cp config/database.yml.example config/database.yml
+before_script: 
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - "cp config/database.yml.example config/database.yml"
 script: bundle exec rake db:create db:migrate db:test:prepare default
 rvm:
   - 1.9.2
