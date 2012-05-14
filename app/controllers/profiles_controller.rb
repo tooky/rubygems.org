@@ -5,10 +5,16 @@ class ProfilesController < ApplicationController
   end
 
   def show
-    @user           = User.find_by_slug!(params[:id])
-    rubygems        = @user.rubygems_downloaded
-    @rubygems       = rubygems.slice!(0, 10)
-    @extra_rubygems = rubygems
+    user           = User.find_by_slug!(params[:id])
+    rubygems       = user.rubygems_downloaded
+    display_profile(user, rubygems.slice!(0,10), rubygems)
+  end
+
+  def display_profile(user, rubygems, extra_rubygems)
+    @user = user
+    @rubygems = rubygems
+    @extra_rubygems = extra_rubygems
+    render :show
   end
 
   def update
