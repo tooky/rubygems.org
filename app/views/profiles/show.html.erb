@@ -1,19 +1,19 @@
 <% content_for :title do %>
   <div id="avatar-frame">
-    <%= gravatar(64, "profile_gravatar", @user) %>
+    <%= gravatar(64, "profile_gravatar", page.user) %>
   </div>
   <div id="profile-info">
-    <h2 id="profile-name"><%= link_to @user.display_handle, profile_path(@user.display_id) %></h2>
-    <h3 id="profile-email"><%= mail_to @user.email, "(email)", :encode => "hex" %></h3>
+    <h2 id="profile-name"><%= link_to page.user.display_handle, profile_path(page.user.display_id) %></h2>
+    <h3 id="profile-email"><%= mail_to page.user.email, "(email)", :encode => "hex" %></h3>
   </div>
   <div id="downloads-ego">
-    <% if @user == current_user %>
+    <% if page.user == current_user %>
       <%= link_to "Edit Profile", edit_profile_path, :id => "edit-profile" %>
     <% end %>
     <h5 id="downloads">Downloads</h5>
     <div id="downloads_count">
-      <div><strong><%= number_with_delimiter(@user.today_downloads_count) %></strong> today</div>
-      <div><strong><%= number_with_delimiter(@user.total_downloads_count) %></strong> all time</div>
+      <div><strong><%= number_with_delimiter(page.user.today_downloads_count) %></strong> today</div>
+      <div><strong><%= number_with_delimiter(page.user.total_downloads_count) %></strong> all time</div>
     </div>
   </div>
 <% end %>
@@ -23,7 +23,7 @@
   <script type="text/javascript">
     $(document).ready(function() {
       var dates = <%= Rubygem.monthly_short_dates.to_json.html_safe %>;
-      <% @rubygems.each do |rubygem| %>
+      <% page.rubygems.each do |rubygem| %>
         $.data(document.body, "graph-<%= rubygem.id %>", <%= rubygem.monthly_downloads.to_json.html_safe %>);
       <% end %>
 
@@ -50,8 +50,8 @@
 <div id="profile">
   <div class="profile-list">
     <ol>
-      <%= render :partial => 'rubygem', :collection => @rubygems, :locals => {:graph => true}  %>
-      <%= render :partial => 'rubygem', :collection => @extra_rubygems, :locals => {:graph => false} %>
+      <%= render :partial => 'rubygem', :collection => page.rubygems, :locals => {:graph => true}  %>
+      <%= render :partial => 'rubygem', :collection => page.extra_rubygems, :locals => {:graph => false} %>
     </ol>
   </div>
 </div>

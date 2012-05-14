@@ -29,12 +29,9 @@ class ProfilesControllerTest < ActionController::TestCase
 
       should respond_with :success
       should render_template :show
-      should assign_to(:user) { @user }
-      should "assign the last 10 most downloaded gems" do
-        assert_equal @rubygems[0..9], assigns[:rubygems]
-      end
-      should "assign the extra gems you own" do
-        assert_equal [@rubygems.last], assigns[:extra_rubygems]
+      should "assign the profile page" do
+        page = ProfilesController::ProfilePage.new(@user, @rubygems[0..9], [@rubygems.last])
+        assert_equal page, assigns[:page]
       end
     end
 
@@ -45,7 +42,9 @@ class ProfilesControllerTest < ActionController::TestCase
 
       should respond_with :success
       should render_template :show
-      should assign_to(:user) { @user }
+      should "set the page user" do
+        assert_equal @user, assigns[:page].user
+      end
     end
 
     context "on GET to show with id" do
@@ -53,7 +52,9 @@ class ProfilesControllerTest < ActionController::TestCase
 
       should respond_with :success
       should render_template :show
-      should assign_to(:user) { @user }
+      should "set the page user" do
+        assert_equal @user, assigns[:page].user
+      end
     end
 
     context "on GET to edit" do

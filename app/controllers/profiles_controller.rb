@@ -7,19 +7,13 @@ class ProfilesController < ApplicationController
   def show
     user           = User.find_by_slug!(params[:id])
     rubygems       = user.rubygems_downloaded
-
-    profile_page = ProfilePage.new(user, rubygems.slice(0,10), rubygems.slice(10..-1))
-    display_profile(profile_page)
+    display_profile(user, rubygems.slice(0,10), rubygems.slice(10..-1))
   end
 
-  def display_profile(page)
-    @user = page.user
-    @rubygems = page.rubygems
-    @extra_rubygems = page.extra_rubygems
+  def display_profile(user, rubygems, extra_rubygems)
+    self.page = ProfilePage.new(user, rubygems, extra_rubygems)
     render :show
   end
-
-  ProfilePage = Struct.new(:user, :rubygems, :extra_rubygems)
 
   def update
     if current_user.update_attributes(params[:user])
@@ -36,4 +30,9 @@ class ProfilesController < ApplicationController
       render :edit
     end
   end
+
+  ProfilePage = Struct.new(:user, :rubygems, :extra_rubygems)
+
+  attr_accessor :page
+  helper_method :page
 end
