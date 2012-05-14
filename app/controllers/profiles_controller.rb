@@ -5,9 +5,7 @@ class ProfilesController < ApplicationController
   end
 
   def show
-    user           = User.find_by_slug!(params[:id])
-    rubygems       = user.rubygems_downloaded
-    display_profile(user, rubygems.slice(0,10), rubygems.slice(10..-1))
+    DisplaysUserProfile.new(self, params[:id]).display
   end
 
   def display_profile(user, rubygems, extra_rubygems)
@@ -32,6 +30,19 @@ class ProfilesController < ApplicationController
   end
 
   ProfilePage = Struct.new(:user, :rubygems, :extra_rubygems)
+
+  class DisplaysUserProfile
+    def initialize(context, user_id)
+      @context = context
+      @user_id = user_id
+    end
+
+    def display
+      user           = User.find_by_slug!(@user_id)
+      rubygems       = user.rubygems_downloaded
+      @context.display_profile(user, rubygems.slice(0,10), rubygems.slice(10..-1))
+    end
+  end
 
   attr_accessor :page
   helper_method :page
